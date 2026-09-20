@@ -36,7 +36,7 @@ Produk bernama **Shiftbase**: REST API penjadwalan shift & absensi (Go/Gin + MyS
 
 ### 1.5 Overview
 
-Bagian 2 deskripsi umum; bagian 3 kebutuhan rinci (antarmuka, fungsional FR, non-fungsional NFR, batasan CON); lampiran: glosarium dan matriks traceability.
+Bagian 2 deskripsi umum; bagian 3 kebutuhan rinci (antarmuka, fungsional FR, non-fungsional NFR, batasan CON); bagian 4 glosarium; bagian 5 referensi; bagian 6 matriks traceability.
 
 ## 2. Deskripsi Umum
 
@@ -52,14 +52,26 @@ Autentikasi JWT + RBAC; CRUD karyawan; roster shift anti-bentrok; absensi check-
 
 Admin/HR dan manajer: melek spreadsheet & operasional shift. Staf: pengguna kasual (login, lihat jadwal, punch). Tak ada kebutuhan aksesibilitas khusus di v1.0.
 
-### 2.4 Batasan
+### 2.4 Lingkungan Operasi
+
+| Aspek | Nilai |
+|---|---|
+| Runtime API | Go/Gin, container distroless |
+| Database | MySQL 8.4 (container, healthcheck) |
+| Web | Vite + React 19 + TS (dev `:5173`) |
+| Tooling QA | Node 22 (Newman, Playwright) |
+| Tooling data | Python 3.13 + pandas/duckdb/matplotlib |
+| Zona waktu | Asia/Jakarta (UTC+7) di semua komponen |
+| Orkestrasi | Docker Compose (api, mysql, adminer) |
+
+### 2.5 Batasan
 
 - CON-TECH-01: MySQL 8.4; Go; timezone Asia/Jakarta.
 - CON-TECH-02: upload CSV maks 2 MB.
 - CON-SEC-01: JWT_SECRET >= 32 char di produksi; `.env` tidak di-commit.
 - CON-STD-01: mengikuti FSD bagian 2-bagian 5.
 
-### 2.5 Asumsi & Dependensi
+### 2.6 Asumsi & Dependensi
 
 - Jam bisnis fixed UTC+7 di semua komponen.
 - Staf register baru tanpa link karyawan -> absensi kosong (by design).
@@ -96,26 +108,31 @@ Admin/HR dan manajer: melek spreadsheet & operasional shift. Staf: pengguna kasu
 
 ### 3.3 Kinerja
 
-| ID | Kebutuhan |
-|---|---|
-| NFR-PERF-01 | `GET /healthz` wajib 200 pada boot normal setelah MySQL healthy. |
-| NFR-PERF-02 | Suite QA wajib: 38/38 TC Pass, Newman 15/15, Playwright 8/8, coverage service >= 60%. |
+| ID | Kebutuhan | Verifikasi | Bukti |
+|---|---|---|---|
+| NFR-PERF-01 | `GET /healthz` wajib 200 pada boot normal setelah MySQL healthy. | Uji boot compose | Log compose + `RUNBOOK.md` repo `-ops` |
+| NFR-PERF-02 | Suite QA wajib: 38/38 TC Pass, Newman 15/15, Playwright 8/8, coverage service >= 60%. | CI QA | `data/results.yaml`, `reports/newman.json`, `reports/playwright.json` repo `-qa` |
 
 ### 3.4 Atribut Sistem
 
-| ID | Kebutuhan |
-|---|---|
-| NFR-SEC-01 | Password wajib bcrypt; JWT wajib secret >= 32 char di produksi. |
-| NFR-SEC-02 | Secret (`.env`, token, password) wajib tidak ter-commit (dukungan: `redact_reports.py`). |
-| NFR-REL-01 | Backup harian + drill restore bulanan; postmortem wajib untuk insiden High. |
-| NFR-MAINT-01 | Skema DB wajib berversi via migrasi goose; tanpa ORM (ADR-001). |
-| NFR-USA-01 | Web berbahasa Indonesia, desain datar tanpa gradien/shadow/emoji. |
+| ID | Kebutuhan | Verifikasi | Bukti |
+|---|---|---|---|
+| NFR-SEC-01 | Password wajib bcrypt; JWT wajib secret >= 32 char di produksi. | Review kode | `internal/` repo `shiftbase`, `.env.example` |
+| NFR-SEC-02 | Secret (`.env`, token, password) wajib tidak ter-commit (dukungan: `redact_reports.py`). | CI + review | `tools/redact_reports.py` repo `-qa` |
+| NFR-REL-01 | Backup harian + drill restore bulanan; postmortem wajib untuk insiden High. | Drill ops | `RUNBOOK.md`, `tickets.yaml` repo `-ops` |
+| NFR-MAINT-01 | Skema DB wajib berversi via migrasi goose; tanpa ORM (ADR-001). | Review migrasi | `migrations/00001`-`00005` repo `shiftbase` |
+| NFR-USA-01 | Web berbahasa Indonesia, desain datar tanpa gradien/shadow/emoji. | Review UI | Repo `shiftbase-web` |
+| NFR-AVAIL-01 | MySQL wajib healthcheck dan API wajib `depends_on healthy` agar boot berurutan; service wajib restart otomatis bila mati. | Uji compose | `docker-compose.yml` repo `shiftbase` |
 
-## Lampiran A - Glosarium
+## 4. Glosarium
 
 Lihat bagian 1.3.
 
-## Lampiran B - Matriks Traceability
+## 5. Referensi
+
+Lihat bagian 1.4.
+
+## 6. Matriks Traceability
 
 | BRD | PRD | FSD | SRS | Uji (shiftbase-qa) |
 |---|---|---|---|---|
