@@ -1,5 +1,9 @@
 # Shiftbase Docs
 
+[![docs](https://github.com/RakhaYandra/shiftbase-docs/actions/workflows/docs-to-pdf.yml/badge.svg)](https://github.com/RakhaYandra/shiftbase-docs/releases)
+
+> Ekosistem: [api](https://github.com/RakhaYandra/shiftbase) · [web](https://github.com/RakhaYandra/shiftbase-web) · [docs](https://github.com/RakhaYandra/shiftbase-docs/releases) · [qa](https://github.com/RakhaYandra/shiftbase-qa) · [data](https://github.com/RakhaYandra/shiftbase-data) · [ops](https://github.com/RakhaYandra/shiftbase-ops)
+
 Dokumentasi resmi sistem **Shiftbase** (Bahasa Indonesia).
 
 **Shiftbase** adalah sistem terpusat untuk penjadwalan shift dan absensi karyawan operasional (kasir, barista, koki). Pengguna: Admin/HR (kelola karyawan & laporan), Manajer (susun roster & pantau absensi), Staf (lihat jadwal & catat absensi). Repo ini adalah sumber dokumen requirements dan desain; kode sumber ada di repo aplikasi (lihat Sumber Fakta).
@@ -31,4 +35,4 @@ Unduh versi formal di halaman [Releases](../../releases).
 | Versi | Tanggal | Isi |
 |---|---|---|
 | v1.0.0 | 2026-09-17 | Rilis awal: BRD, PRD, FSD, SRS + PDF |
-| v1.1.0 | - | Penambahan Guideline v1.0: ID BO/SC, flows PRD, spec pointer FSD, ERD, NFR verifikasi (belum dirilis) |
+| v1.1.0 | 2026-09-20 | Penambahan Guideline v1.0: ID BO/SC, flows PRD, spec pointer FSD, ERD, NFR verifikasi |
